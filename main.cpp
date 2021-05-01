@@ -6,9 +6,14 @@
 
 using TLl = long long;
 
+bool isInvalid(int a, int b, int c) {
+    double p = (a + b + c) / 2.0;
+    return ((p - a) <= 0.0 || (p - b ) <= 0.0 || (p - c) <= 0.0);
+}
+
 double calcArea(int a, int b, int c) {
     double p = (a + b + c) / 2.0;
-    if ((p - a) <= 0 || (p - b ) <= 0 || (p - c) <= 0) {
+    if (isInvalid(a, b, c)) {
         return 0.0;
     }
     return std::sqrt(p * (p - a) * (p - b) * (p - c));
@@ -22,26 +27,14 @@ void solve(std::vector<int>& lengths) {
     int second = -1;
     int third = -1;
     for (int i = 0; i < lengths.size() - 2; ++i) {
-        for (int j = i + 1; j < lengths.size() - 1; ++j) {
-            int l = j + 1;
-            int r = lengths.size() - 1;
-            while (r - l >= 3) {
-                int m1 = l + (r - l) / 3;
-                int m2 = r - (r - l) / 3;
-                if (calcArea(lengths[i], lengths[j], lengths[m1]) < calcArea(lengths[i], lengths[j], lengths[m2])) {
-                    l = m1;
-                } else {
-                    r = m2;
-                }
-            }
-            for (int k = l; k <= r; ++k) {
-                if (calcArea(lengths[i], lengths[j], lengths[k]) > maxArea) {
-                    maxArea = calcArea(lengths[i], lengths[j], lengths[k]);
-                    first = i;
-                    second = j;
-                    third = k;
-                }
-            }
+        int j = i + 1;
+        int k = i + 2;
+        if (!isInvalid(lengths[i], lengths[j], lengths[k]) &&
+            calcArea(lengths[i], lengths[j], lengths[k]) > maxArea) {
+            maxArea = calcArea(lengths[i], lengths[j], lengths[k]);
+            first = i;
+            second = j;
+            third = k;
         }
     }
     if (maxArea == 0.0) {
