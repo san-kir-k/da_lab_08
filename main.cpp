@@ -28,13 +28,26 @@ void solve(std::vector<int>& lengths) {
     int third = -1;
     for (int i = 0; i < lengths.size() - 2; ++i) {
         int j = i + 1;
-        int k = i + 2;
-        if (!isInvalid(lengths[i], lengths[j], lengths[k]) &&
-            calcArea(lengths[i], lengths[j], lengths[k]) > maxArea) {
-            maxArea = calcArea(lengths[i], lengths[j], lengths[k]);
-            first = i;
-            second = j;
-            third = k;
+        int l = j + 1;
+        int r = lengths.size() - 1;
+        while (r - l >= 3) {
+            int m1 = l + (r - l) / 3;
+            int m2 = r - (r - l) / 3;
+            if (calcArea(lengths[i], lengths[j], lengths[m1]) < 
+                calcArea(lengths[i], lengths[j], lengths[m2])) {
+                l = m1;
+            } else {
+                r = m2;
+            }
+        }
+        for (int k = l; k <= r; ++k) {
+            if (!isInvalid(lengths[i], lengths[j], lengths[k]) && 
+                calcArea(lengths[i], lengths[j], lengths[k]) > maxArea) {
+                maxArea = calcArea(lengths[i], lengths[j], lengths[k]);
+                first = i;
+                second = j;
+                third = k;
+            }
         }
     }
     if (maxArea == 0.0) {
